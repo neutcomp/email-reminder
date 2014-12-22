@@ -93,7 +93,7 @@ class PDER_Admin{
 		/** Validate/Sanitize **/
 		//Reminder
 		if( '' === $pder['reminder'] ){
-			$error['reminder'] = 'Please enter a reminder.';
+			$error['reminder'] = __( 'Please enter a reminder.', 'email-reminder' );
 			$clean['reminder'] = '';
 		} else {
 			$clean['reminder'] = $pder['reminder'];
@@ -107,7 +107,7 @@ class PDER_Admin{
 		
 		//Email
 		if( '' === $pder['email'] || !is_email( $pder['email'] ) ){
-			$error['email'] = 'Please enter a valid e-mail address.';
+			$error['email'] = __( 'Please enter a valid e-mail address.', 'email-reminder' );
 			$clean['email'] = '';
 		} else {
 			$clean['email'] = $pder['email'];
@@ -120,10 +120,10 @@ class PDER_Admin{
 		
 		//validate dates and specify default ones if needed
 		if( '' === $pder['date'] ){
-			$error['date'] = 'Please enter date in the correct format (YYYY-MM-DD).';
+			$error['date'] = __( 'Please enter date in the correct format (YYYY-MM-DD).', 'email-reminder' );
 		}
 		if( '' === $pder['time'] ){
-			$error['time'] = 'Please enter time in the correct format (HH:MM:S).';
+			$error['time'] = __( 'Please enter time in the correct format (HH:MM:S).', 'email-reminder' );
 		}
 		$date_unformatted = empty( $pder['date'] )? $timenow : strtotime( $pder['date'] );
 		$time_unformatted = empty( $pder['time'] ) ? $timenow + 60*60 : strtotime( $pder['time'] );
@@ -157,12 +157,12 @@ class PDER_Admin{
 			
 			/** In theory, $insert_post_id can be 0, but very unlikely on a WP site **/
 			if( empty( $insert_post_id ) ){
-				$this->_messages['error'][] = 'There was an error scheduling your reminder.';
+				$this->_messages['error'][] = __( 'There was an error scheduling your reminder.', 'email-reminder' );
 			} else {
 				if( $data['pder-action'] == 'update' ){
-					$this->_messages['success'][] = 'Updated reminder <strong>#' . $insert_post_id . '</strong> scheduled for ' . date( 'F j, Y h:i A', strtotime( $date_all ) ) . '.';
+					$this->_messages['success'][] = __( 'Updated reminder', 'email-reminder' ) .' <strong>#' . $insert_post_id . '</strong> '. __( 'scheduled for', 'email-reminder' ) .' ' . date( 'F j, Y h:i A', strtotime( $date_all ) ) . '.';
 				} else {
-					$this->_messages['success'][] = 'Reminder <strong>#' . $insert_post_id . '</strong> scheduled for ' . date( 'F j, Y h:i A', strtotime( $date_all ) ) . ' added.';
+					$this->_messages['success'][] = __( 'Reminder', 'email-reminder' ) .' <strong>#' . $insert_post_id . '</strong> '. __( 'scheduled for', 'email-reminder' ) .' ' . date( 'F j, Y h:i A', strtotime( $date_all ) ) .' '. __( 'added.', 'email-reminder' );
 				}
 				
 				//set to defaults
@@ -195,7 +195,7 @@ class PDER_Admin{
 			'id' => $post->ID
 		);
 		
-		$message = 'Editing Reminder <strong>#' . $post->ID.'</strong>';
+		$message = __( 'Editing Reminder', 'email-reminder' ) .' <strong>#' . $post->ID.'</strong>';
 		
 		if( isset( $data['ajax'] ) && $data['ajax'] == 'true' ){
 			$return = array(
@@ -223,15 +223,15 @@ class PDER_Admin{
 		$success = array();
 		
 		if( empty( $post ) ){
-			$error[] = 'Error: Invalid ID: <strong>#'. $post_id . '</strong>.';
+			$error[] = __( 'Error: Invalid ID:', 'email-reminder' ) .' <strong>#'. $post_id . '</strong>.';
 		} else {
 			$result = wp_delete_post( $post_id, true ); //bypass trash and force deletion
 			if( !$result ){
 				//failure
-				$error[] = 'Error: Failure deleting reminder <strong>#'. $post_id . '</strong>. Please try again.';
+				$error[] = __( 'Error: Failure deleting reminder', 'email-reminder' ) .' <strong>#'. $post_id . '</strong>. '. __( 'Please try again.', 'email-reminder' );
 			} else {
 				//successful
-				$success[] = 'Reminder <strong>#' . $post_id . '</strong> deleted.';
+				$success[] = __( 'Reminder', 'email-reminder' ) .' <strong>#' . $post_id . '</strong> '. __( 'deleted.', 'email-reminder' );
 			}
 		}
 		
@@ -265,9 +265,9 @@ class PDER_Admin{
 		} else {
 			foreach( $ereminders as $ereminder ){
 				if( wp_delete_post( $ereminder->ID ) ){
-					$success[] = 'Reminder <strong>#' . $ereminder->ID . '</strong> deleted.';
+					$success[] = __( 'Reminder', 'email-reminder' ). ' <strong>#' . $ereminder->ID . '</strong> '. __( 'deleted.', 'email-reminder' );
 				} else {
-					$error[] = 'Error deleting reminder <strong>#'. $ereminder->ID . '</strong>.';
+					$error[] = __( 'Error deleting reminder', 'email-reminder' ). ' <strong>#'. $ereminder->ID . '</strong>.';
 				}
 			}
 		}
